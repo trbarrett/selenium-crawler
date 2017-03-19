@@ -9,8 +9,10 @@
   "author": "Tristian Barrett <trbarrett@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
+    "mock-require": "^2.0.1",
     "selenium-webdriver": "^3.3.0"
   }
 }
