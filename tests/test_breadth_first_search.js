@@ -8,9 +8,9 @@ const should = chai.should();
 describe("breadth first search", function() {
 
   it("should work with single node graph", function() {
-    const graphSearch = breadthFirstSearch(10, x => x, x => []);
+    const graphSearch = breadthFirstSearch(10, x => x);
     graphSearch.next().value.should.equal(10);
-    graphSearch.next().done.should.be.true;
+    graphSearch.next([]).done.should.be.true;
   });
 
   it("should work with simple uni-directed tree", function() {
@@ -26,13 +26,13 @@ describe("breadth first search", function() {
       node1, x => x.val, x => x.adj);
 
     graphSearch.next().value.should.equal(node1);
-    graphSearch.next().value.should.equal(node2);
-    graphSearch.next().value.should.equal(node3);
-    graphSearch.next().value.should.equal(node4);
-    graphSearch.next().value.should.equal(node5);
-    graphSearch.next().value.should.equal(node6);
-    graphSearch.next().value.should.equal(node7);
-    graphSearch.next().done.should.be.true;
+    graphSearch.next(node1.adj).value.should.equal(node2);
+    graphSearch.next(node2.adj).value.should.equal(node3);
+    graphSearch.next(node3.adj).value.should.equal(node4);
+    graphSearch.next(node4.adj).value.should.equal(node5);
+    graphSearch.next(node5.adj).value.should.equal(node6);
+    graphSearch.next(node6.adj).value.should.equal(node7);
+    graphSearch.next(node7.adj).done.should.be.true;
   });
 
   it("should work with simple bi-directed tree", function() {
@@ -52,16 +52,16 @@ describe("breadth first search", function() {
     node6.adj = [node3];
     node7.adj = [node3];
 
-    const graphSearch = breadthFirstSearch(
-      node1, x => x.val, x => x.adj);
+    const graphSearch = breadthFirstSearch(node1, x => x.val);
+
     graphSearch.next().value.should.equal(node1);
-    graphSearch.next().value.should.equal(node2);
-    graphSearch.next().value.should.equal(node3);
-    graphSearch.next().value.should.equal(node4);
-    graphSearch.next().value.should.equal(node5);
-    graphSearch.next().value.should.equal(node6);
-    graphSearch.next().value.should.equal(node7);
-    graphSearch.next().done.should.be.true;
+    graphSearch.next(node1.adj).value.should.equal(node2);
+    graphSearch.next(node2.adj).value.should.equal(node3);
+    graphSearch.next(node3.adj).value.should.equal(node4);
+    graphSearch.next(node4.adj).value.should.equal(node5);
+    graphSearch.next(node5.adj).value.should.equal(node6);
+    graphSearch.next(node6.adj).value.should.equal(node7);
+    graphSearch.next(node7.adj).done.should.be.true;
   });
 
   it("should work with messy graph", function() {
@@ -83,39 +83,17 @@ describe("breadth first search", function() {
     node7.adj = [node3, node5];
     node8.adj = [node8];
 
-    const graphSearch = breadthFirstSearch(
-      node1, x => x.val, x => x.adj);
-    graphSearch.next().value.should.equal(node1);
-    graphSearch.next().value.should.equal(node2);
-    graphSearch.next().value.should.equal(node7);
-    graphSearch.next().value.should.equal(node4);
-    graphSearch.next().value.should.equal(node3);
-    graphSearch.next().value.should.equal(node5);
-    graphSearch.next().value.should.equal(node6);
-    graphSearch.next().value.should.equal(node8);
-    graphSearch.next().done.should.be.true;
-  });
-
-  it("should work with a generator function for getAdjacent", function() {
-    const node4 = { val: 4, adj: [] };
-    const node3 = { val: 3, adj: [node4] };
-    const node2 = { val: 2, adj: [node3] };
-    const node1 = { val: 1, adj: [node2, node3] };
-
-    const getAdjacent = function* (node) {
-      for (let adj of node.adj) {
-        yield adj;
-      }
-    }
-
-    const graphSearch = breadthFirstSearch(
-      node1, n => n.val, n => getAdjacent(n));
+    const graphSearch = breadthFirstSearch(node1, x => x.val);
 
     graphSearch.next().value.should.equal(node1);
-    graphSearch.next().value.should.equal(node2);
-    graphSearch.next().value.should.equal(node3);
-    graphSearch.next().value.should.equal(node4);
-    graphSearch.next().done.should.be.true;
+    graphSearch.next(node1.adj).value.should.equal(node2);
+    graphSearch.next(node2.adj).value.should.equal(node7);
+    graphSearch.next(node7.adj).value.should.equal(node4);
+    graphSearch.next(node4.adj).value.should.equal(node3);
+    graphSearch.next(node3.adj).value.should.equal(node5);
+    graphSearch.next(node5.adj).value.should.equal(node6);
+    graphSearch.next(node6.adj).value.should.equal(node8);
+    graphSearch.next(node8.adj).done.should.be.true;
   });
 
 });
