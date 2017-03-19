@@ -10,7 +10,7 @@ function crawlDomain(startUrl, domain, maxPages) {
 
   // returns a promise, which will crawl all the pages
   // in crawlerIter up to the maxPages count
-  return crawlAll(crawlerIter, maxPages);
+  return crawlAll(crawlerIter, domain, maxPages);
 }
 
 
@@ -21,11 +21,11 @@ function crawlDomain(startUrl, domain, maxPages) {
  * generator function: crawlerIter
  *
  */
-function crawlAll(crawlerIter, maxPages) {
+function crawlAll(crawlerIter, domain, maxPages) {
   const crawledPages = [];
   const crawler = (function(page) {
     //crawl the given page
-    return crawlPage(page).then(linkedPages => {
+    return crawlPage(page, domain).then(linkedPages => {
       crawledPages.push(page);
 
       //we've hit the limit of the pages we want to visit
@@ -54,8 +54,8 @@ function crawlAll(crawlerIter, maxPages) {
  * the page, set the asssets on the page object, and return the
  * resolve to the linked pages if any
  */
-function crawlPage(page) {
-  return getPageLinksAndAssets(page.url).then(([links, assets]) => {
+function crawlPage(page, domain) {
+  return getPageLinksAndAssets(page.url, domain).then(([links, assets]) => {
     page.assets = assets; //set the assest for the page
     // map each link into an actual page object that we want to visit
     // in the future
