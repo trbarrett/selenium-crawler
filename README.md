@@ -30,11 +30,11 @@ It will follow links between the schemes in the same domain.
 
 ### 4. Alternatively
 
-a) Make sure node is installed (6.10)
-b) Run npm install
-c) Run selenium locally
-d) Update the selenium settings at src/get_page_links_and_assets.js:12
-e) call: node app.js www.google.co.uk
+1. Make sure node is installed (>= 6.10)
+2. Run yarn/npm install
+3. Run selenium locally
+4. Update the selenium settings at src/get_page_links_and_assets.js:12
+5. run: node app.js www.google.co.uk
 
 
 ## Output
