@@ -7,8 +7,8 @@ const Queue = require('./queue.js');
  * @param {any} startNode - where to start the search from
  * @param {function} getKey - function that can get a 'key' for any given node.
  *   The key is used to ensure we don't revisit a node
- * @param {function} getAdjacent - function that finds all the adjacent
- *   'connected' nodes for the given node
+ * @param {function} getAdjacent - generator function that finds all the
+ *  adjacent 'connected' nodes for the given node
  */
 function* breadthFirstSearch(startNode, getKey, getAdjacent) {
   const visited = new Set();
@@ -18,7 +18,7 @@ function* breadthFirstSearch(startNode, getKey, getAdjacent) {
   while (queue.length()) {
     const curr = queue.dequeue();
     yield curr;
-    const adj = getAdjacent(curr);
+    let adj = getAdjacent(curr);
     for (let v of adj) {
       const key = getKey(v);
       if (!visited.has(key)) {

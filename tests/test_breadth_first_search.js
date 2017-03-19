@@ -96,4 +96,26 @@ describe("breadth first search", function() {
     graphSearch.next().done.should.be.true;
   });
 
+  it("should work with a generator function for getAdjacent", function() {
+    const node4 = { val: 4, adj: [] };
+    const node3 = { val: 3, adj: [node4] };
+    const node2 = { val: 2, adj: [node3] };
+    const node1 = { val: 1, adj: [node2, node3] };
+
+    const getAdjacent = function* (node) {
+      for (let adj of node.adj) {
+        yield adj;
+      }
+    }
+
+    const graphSearch = breadthFirstSearch(
+      node1, n => n.val, n => getAdjacent(n));
+
+    graphSearch.next().value.should.equal(node1);
+    graphSearch.next().value.should.equal(node2);
+    graphSearch.next().value.should.equal(node3);
+    graphSearch.next().value.should.equal(node4);
+    graphSearch.next().done.should.be.true;
+  });
+
 });
