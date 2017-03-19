@@ -1,0 +1,10 @@
+selenium:
+  image: selenium/standalone-chrome
+
+web-crawler:
+  image: node:6.10 
+  volumes:
+    - ./:/usr/src/app
+  links:
+    - selenium
+  working_dir: /usr/src/app
