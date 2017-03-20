@@ -35,14 +35,16 @@ function getPageLinks(driver, domain) {
   const getStandardLinks = attrValueFinder(driver,
     //all 'anchor' tags that aren't set to "no follow"
     'a[href]:not([rel="no-follow"])', 
-    [],
-    'href',
+    [], //no element filters
+    'href', //extract the href attributes
+    //then filter it by the domain
     [x => internalLinkRegexp.test(x)]);
 
   const getIframePages = attrValueFinder(driver,
-    'iframe[src]',
+    'iframe[src]', //any iframe with a src
     [],
-    'src',
+    'src', //extract the src attributes
+    //and filter it by the domain
     [x => internalLinkRegexp.test(x)]);
 
   return Promise.join(getStandardLinks, getIframePages, 
@@ -52,17 +54,18 @@ function getPageLinks(driver, domain) {
 
 function getPageAssets(driver, domain) {
   const getStandardAssets = attrValueFinder(driver,
-    '[src]',
+    '[src]', //any element with a src attribute
     // filter out elements with a tag of 'iframe'.
     // I'm considering those to be page links (see above)
     [(e) => e.getTagName().then(tn => tn !== 'iframe')],
-    'src',
+    'src', //extract the src attributes
     []);
 
   const getLinkAssets = attrValueFinder(driver,
+    //all link tags of rel types: icon or stylesheet
     'link[href][rel="icon"], link[href][rel="stylesheet"]',
     [],
-    'href',
+    'href', //extract the href attributes
     []);
 
   return Promise.join(getStandardAssets, getLinkAssets, 
