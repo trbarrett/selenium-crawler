@@ -8,7 +8,15 @@ A very simple webcrawler project that uses selenium for 'HTML parsing and making
 
 ### 2. Download and install docker and docker-compose 
 
-### 3. Run it
+### 3. Download the docker images and make sure the node_modules are up to date
+
+```
+  docker-compose run web-crawler yarn install
+```
+
+### 4. Run it
+
+Last argument is the website to hit. e.g. for 'www.google.co.uk'
 
 ```
   docker-compose run web-crawler node app.js www.google.co.uk
@@ -28,11 +36,14 @@ You can also set a specific scheme (by default it uses http)
 
 It will follow links between the schemes in the same domain.
 
-### 4. Alternatively
+
+I've tested the install on 2 different computers.
+
+### 5. Alternatively
 
 1. Make sure node is installed (>= 6.10)
 2. Run yarn/npm install
-3. Run selenium locally
+3. Run selenium locally (and appropriate drivers)
 4. Update the selenium settings at src/get_page_links_and_assets.js:12
 5. run: node app.js www.google.co.uk
 
@@ -77,7 +88,7 @@ I added the 'crawling ' indicators because it can be quite slow waiting for sele
 There are several mocha tests. They can be run in a docker container via:
 
 ```
-  docker run selenium-crawler npm test
+  docker run tub55/selenium-crawler npm test
 ```
 
 Or, if you have node setup locally, and you've run 'yarn/npm install':
@@ -116,6 +127,10 @@ There are a lot of promises and one generator function (the bfs). It's not that 
 
 - BUG: The crawler will list the same asset multiple times if it's in the page more than once. Fix is easy enough (lodash.uniq(assets)) I simply didn't have the time.
 - The crawler treats iframes as other web pages to crawl, not as assets.
+- The crawler only crawls pages within the given domain. Any assets are fair game though.
 - The crawler does check _link_ elements for a few asset types, but not all. It avoids checking _link_ elements for links to other pages. That can get messy fast so I decided to leave it out for the sake of time.
 - The crawler considers differing _querystrings_, or _fragments_ to be different pages or assets. That's not ideal, but determining what actually constitutes a 'web page' is something I leave to a different exercise I think.
 
+### Others
+
+- ISSUE: I did have the occasional issue when the connection between the node and selenium containers would die, and the app would halt. I needed to kill the docker container when that happened and try again.
