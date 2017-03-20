@@ -16,10 +16,7 @@ function crawlDomain(startUrl, domain, maxPages) {
 
 /**
  * Returns a promise which will iterate through all the pages,
- * and end up returning the list of crawled pages when finished
- * It's basically a reducer function on an potentially infintie
- * generator function: crawlerIter
- *
+ * and end up resolving to the list of crawled pages when finished
  */
 function crawlAll(crawlerIter, domain, maxPages) {
   const crawledPages = [];
@@ -52,7 +49,7 @@ function crawlAll(crawlerIter, domain, maxPages) {
 /**
  * Returns a promise, that will load all the links and assets for
  * the page, set the asssets on the page object, and return the
- * resolve to the linked pages if any
+ * resolver to the linked pages if any
  */
 function crawlPage(page, domain) {
   return getPageLinksAndAssets(page.url, domain).then(([links, assets]) => {
